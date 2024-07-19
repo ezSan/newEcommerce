@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { TextField, Button, MenuItem, Box, IconButton, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Box,
+  IconButton,
+  Typography
+} from "@mui/material";
 import { useDropzone } from "react-dropzone";
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
-
 
 const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
   const [product, setProduct] = useState({
@@ -11,10 +17,11 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
     brand: "",
     category: "",
     price: "",
+    currency: "$",
     images: []
   });
   const [newBrand, setNewBrand] = useState("");
-  const theme = useTheme()
+  const theme = useTheme();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -34,7 +41,10 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
   const onDrop = acceptedFiles => {
     setProduct(prev => ({
       ...prev,
-      images: [...prev.images, ...acceptedFiles.slice(0, 3 - prev.images.length)]
+      images: [
+        ...prev.images,
+        ...acceptedFiles.slice(0, 3 - prev.images.length)
+      ]
     }));
   };
 
@@ -52,6 +62,7 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
       brand: "",
       category: "",
       price: "",
+      currency: "$",
       images: []
     });
   };
@@ -75,11 +86,11 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
         fullWidth
         margin="normal"
       >
-        {brands.map(brand => (
+        {brands.map(brand =>
           <MenuItem key={brand.id} value={brand.name}>
             {brand.name}
           </MenuItem>
-        ))}
+        )}
         <MenuItem>
           <Box display="flex" alignItems="center">
             <TextField
@@ -104,23 +115,46 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
         fullWidth
         margin="normal"
       >
-        {categories.map(category => (
+        {categories.map(category =>
           <MenuItem key={category.id} value={category.name}>
             {category.name}
           </MenuItem>
-        ))}
+        )}
       </TextField>
-      <TextField
-        label="Precio"
-        name="price"
-        value={product.price}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-      />
-      <Box {...getRootProps()} sx={{ border: "2px dashed #ccc", padding: theme.spacing(2), marginTop: theme.spacing(2) }}>
+      <Box display="flex" gap={2} alignItems="center">
+        <TextField
+          label="Precio"
+          name="price"
+          value={product.price}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          select
+          label="Moneda"
+          name="currency"
+          value={product.currency}
+          onChange={handleChange}
+          margin="normal"
+          sx={{ width: "100px" }}
+        >
+          <MenuItem value="$">$</MenuItem>
+          <MenuItem value="u$">u$</MenuItem>
+        </TextField>
+      </Box>
+      <Box
+        {...getRootProps()}
+        sx={{
+          border: "2px dashed #ccc",
+          padding: theme.spacing(2),
+          marginTop: theme.spacing(2)
+        }}
+      >
         <input {...getInputProps()} />
-        <Typography>Arrastra hasta 3 imágenes aquí, o haz clic para seleccionar</Typography>
+        <Typography>
+          Arrastra hasta 3 imágenes aquí, o haz clic para seleccionar
+        </Typography>
       </Box>
       <Box mt={2}>
         <Button type="submit" variant="contained" color="primary" fullWidth>

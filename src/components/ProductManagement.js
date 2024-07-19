@@ -1,4 +1,3 @@
-// src/components/ProductManagement.js
 import React, { useState, useEffect } from "react";
 import { Container, Typography, Grid, Paper, Box, Button } from "@mui/material";
 import { db } from "../firebaseConfig";
@@ -11,12 +10,19 @@ import {
 } from "firebase/firestore";
 import { useTheme } from "@mui/material/styles";
 import EditProductForm from "./EditProductForm";
+import SearchInput from "./SearchInput";
 
 const ProductManagement = ({ categories, brands }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const theme = useTheme();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProducts = products
+    .filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,8 +66,12 @@ const ProductManagement = ({ categories, brands }) => {
   return (
     <Container maxWidth="lg">
       <Box mt={4}>
+        <SearchInput
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
         <Grid container spacing={4}>
-          {products.map(product =>
+          {filteredProducts.map(product =>
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Paper sx={{ padding: theme.spacing(2) }}>
                 <Typography variant="h6">

@@ -2,15 +2,22 @@ import React, { useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import ProductCard from "./ProductCard";
 import Sidebar from "./Sidebar";
+import SearchInput from "./SearchInput";
 import { useTheme } from "@mui/material/styles";
 
 const ProductGrid = ({ products, categories = [] }) => {
   const theme = useTheme();
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProducts = selectedCategory
-    ? products.filter(product => product.category === selectedCategory)
-    : products;
+  const filteredProducts = products
+    .filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(
+      product =>
+        selectedCategory ? product.category === selectedCategory : true
+    );
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -22,6 +29,10 @@ const ProductGrid = ({ products, categories = [] }) => {
         />
       </Box>
       <Box sx={{ flexGrow: 1, p: 2 }}>
+        <SearchInput
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
         <Grid container spacing={4}>
           {filteredProducts.map(product =>
             <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>

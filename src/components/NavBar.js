@@ -8,11 +8,11 @@ export default function NavBar() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Ez-Commerce
+          <Button color="inherit" onClick={() => router.push("/")}>
+            Ez-Commerce
+          </Button>
         </Typography>
-        <Button color="inherit" onClick={() => router.push("/")}>
-          Inicio
-        </Button>
+
         <Button color="inherit" onClick={() => router.push("/Questions")}>
           Preguntas frecuentes
         </Button>

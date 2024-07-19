@@ -4,7 +4,7 @@ import { db, storage } from "../firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import ProductForm from "../components/ProductForm";
-import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB";
+import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB"; 
 import ProductManagement from "../components/ProductManagement";
 import SalesManagement from "../components/SalesManagement"
 import ClientsManagement from "../components/ClientsManagement"
@@ -65,13 +65,20 @@ const PanelAdmin = () => {
   const handleConfirm = async () => {
     try {
       for (const product of products) {
-        const imageUrl = await uploadImageAndGetURL(product.image);
-        const productWithImageURL = {
+        const imageUrls = await Promise.all(product.images.map(async (image) => {
+          const storageRef = ref(storage, `products/${image.name}`);
+          await uploadBytes(storageRef, image);
+          const url = await getDownloadURL(storageRef);
+          return url;
+        }));
+  
+        const productWithImageURLs = {
           ...product,
-          image: imageUrl,
+          images: imageUrls,
         };
+  
         const productsRef = collection(db, "products");
-        await addDoc(productsRef, productWithImageURL);
+        await addDoc(productsRef, productWithImageURLs);
       }
       setProducts([]);
       const querySnapshot = await getDocs(collection(db, "products"));
