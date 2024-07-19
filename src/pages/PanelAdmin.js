@@ -6,6 +6,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import ProductForm from "../components/ProductForm";
 import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB";
 import ProductManagement from "../components/ProductManagement";
+import SalesManagement from "../components/SalesManagement"
+import ClientsManagement from "../components/ClientsManagement"
 import { useTheme } from "@mui/material/styles";
 
 const PanelAdmin = () => {
@@ -92,6 +94,8 @@ const PanelAdmin = () => {
       <Tabs value={selectedTab} onChange={handleTabChange} aria-label="Panel de administración">
         <Tab label="Cargar Producto" />
         <Tab label="Administrar Productos" />
+        <Tab label="Ventas" />
+        <Tab label="Clientes" />
       </Tabs>
       {selectedTab === 0 && (
         <Grid container spacing={4}>
@@ -108,6 +112,8 @@ const PanelAdmin = () => {
         </Grid>
       )}
       {selectedTab === 1 && <ProductManagement categories={categories} brands={brands} />}
+      {selectedTab === 2 && <SalesManagement/>}
+      {selectedTab === 3 && <ClientsManagement/>}
     </Container>
   );
 };
