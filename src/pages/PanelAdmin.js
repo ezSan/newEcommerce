@@ -4,7 +4,7 @@ import { db, storage } from "../firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import ProductForm from "../components/ProductForm";
-import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB"; 
+/* import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB";  */
 import ProductManagement from "../components/ProductManagement";
 import SalesManagement from "../components/SalesManagement"
 import ClientsManagement from "../components/ClientsManagement"
@@ -112,9 +112,9 @@ const PanelAdmin = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Paper style={{ padding: theme.spacing(2) }}>
+     {/*        <Paper style={{ padding: theme.spacing(2) }}>
               <ItemsReadyToPushIntoDB products={products} onConfirm={handleConfirm} />
-            </Paper>
+            </Paper> */}
           </Grid>
         </Grid>
       )}
