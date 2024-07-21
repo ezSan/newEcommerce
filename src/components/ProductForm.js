@@ -18,7 +18,7 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
     category: "",
     price: "",
     currency: "$",
-    images: []
+    images: []  // Asegurándote de que el campo se llama `images` y no `image`
   });
   const [newBrand, setNewBrand] = useState("");
   const theme = useTheme();
@@ -63,7 +63,7 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
       category: "",
       price: "",
       currency: "$",
-      images: []
+      images: []  // Reseteando correctamente el campo `images`
     });
   };
 
