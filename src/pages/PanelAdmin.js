@@ -4,7 +4,7 @@ import { db, storage } from "../firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import ProductForm from "../components/ProductForm";
-/* import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB";  */
+import ItemsReadyToPushIntoDB from "../components/ItemsReadyToPushIntoDB";
 import ProductManagement from "../components/ProductManagement";
 import SalesManagement from "../components/SalesManagement"
 import ClientsManagement from "../components/ClientsManagement"
@@ -74,7 +74,7 @@ const PanelAdmin = () => {
   
         const productWithImageURLs = {
           ...product,
-          images: imageUrls,
+          images: imageUrls,  // Asegurándote de que el campo es `images` en plural
         };
   
         const productsRef = collection(db, "products");
@@ -112,17 +112,42 @@ const PanelAdmin = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
-     {/*        <Paper style={{ padding: theme.spacing(2) }}>
+            <Paper style={{ padding: theme.spacing(2) }}>
               <ItemsReadyToPushIntoDB products={products} onConfirm={handleConfirm} />
-            </Paper> */}
+            </Paper>
           </Grid>
         </Grid>
       )}
-      {selectedTab === 1 && <ProductManagement categories={categories} brands={brands} />}
-      {selectedTab === 2 && <SalesManagement/>}
-      {selectedTab === 3 && <ClientsManagement/>}
+      {selectedTab === 1 && (
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Paper style={{ padding: theme.spacing(2) }}>
+              <ProductManagement products={dbProducts} categories={categories} brands={brands} />
+            </Paper>
+          </Grid>
+        </Grid>
+      )}
+      {selectedTab === 2 && (
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Paper style={{ padding: theme.spacing(2) }}>
+              <SalesManagement />
+            </Paper>
+          </Grid>
+        </Grid>
+      )}
+      {selectedTab === 3 && (
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Paper style={{ padding: theme.spacing(2) }}>
+              <ClientsManagement />
+            </Paper>
+          </Grid>
+        </Grid>
+      )}
     </Container>
   );
 };
 
 export default PanelAdmin;
+
