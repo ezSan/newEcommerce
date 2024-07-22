@@ -1,7 +1,7 @@
 import React from "react";
 import { List, ListItem, ListItemText, Button } from "@mui/material";
 
-const ItemsReadyToPushIntoDB = ({ products, onConfirm }) => {
+const ItemsReadyToPushIntoFirebase = ({ products, onConfirm }) => {
   return (
     <div>
       <List>
@@ -21,4 +21,4 @@ const ItemsReadyToPushIntoDB = ({ products, onConfirm }) => {
   );
 };
 
-export default ItemsReadyToPushIntoDB;
+export default ItemsReadyToPushIntoFirebase;
