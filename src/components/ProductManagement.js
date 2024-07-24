@@ -1,20 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box, Switch, Typography } from "@mui/material";
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Box,
+  Switch,
+} from "@mui/material";
 import { db } from "../firebaseConfig";
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc
+} from "firebase/firestore";
 import { useTheme } from "@mui/material/styles";
 import EditProductForm from "./EditProductForm";
 import SearchInput from "./SearchInput";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
 
 const ProductManagement = ({ categories, brands }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
+  const theme = useTheme();
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -59,10 +77,33 @@ const ProductManagement = ({ categories, brands }) => {
     setSelectedProduct(null);
   };
 
+  const toggleAvailable = async (id, available) => {
+    const productRef = doc(db, "products", id);
+    await updateDoc(productRef, { available: !available });
+    setProducts(
+      products.map(product =>
+        product.id === id ? { ...product, available: !available } : product
+      )
+    );
+  };
+
+  const toggleOffer = async (id, offer) => {
+    const productRef = doc(db, "products", id);
+    await updateDoc(productRef, { offer: !offer });
+    setProducts(
+      products.map(product =>
+        product.id === id ? { ...product, offer: !offer } : product
+      )
+    );
+  };
+
   return (
     <Container maxWidth="lg">
       <Box mt={4}>
-        <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <SearchInput
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -80,50 +121,81 @@ const ProductManagement = ({ categories, brands }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredProducts.map(product => (
+              {filteredProducts.map(product =>
                 <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.brand}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>{product.currency} {product.price}</TableCell>
                   <TableCell>
-                    <Image src={product.images[0]} alt={product.name} width={50} height={50} />
+                    {product.name}
                   </TableCell>
                   <TableCell>
-                    <Image src={product.images[1]} alt={product.name} width={50} height={50} />
+                    {product.brand}
                   </TableCell>
                   <TableCell>
-                    <Image src={product.images[2]} alt={product.name} width={50} height={50} />
+                    {product.category}
+                  </TableCell>
+                  <TableCell>
+                    {product.currency} {product.price}
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[1]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[2]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
                   </TableCell>
                   <TableCell>
                     <Switch
                       checked={product.available}
                       color="primary"
-                      disabled
+                      onChange={() => toggleAvailable(product.id, product.available)}
                     />
                   </TableCell>
                   <TableCell>
                     <Switch
                       checked={product.offer}
                       color="primary"
-                      disabled
+                      onChange={() => toggleOffer(product.id, product.offer)}
                     />
                   </TableCell>
                   <TableCell>
-                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditOpen(product)}>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditOpen(product)}
+                    >
                       <EditIcon />
                     </IconButton>
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteProduct(product.id)}>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Box>
-      {selectedProduct && (
+      {selectedProduct &&
         <EditProductForm
           open={isEditOpen}
           onClose={handleEditClose}
@@ -131,8 +203,7 @@ const ProductManagement = ({ categories, brands }) => {
           categories={categories}
           brands={brands}
           onSave={handleUpdateProduct}
-        />
-      )}
+        />}
     </Container>
   );
 };
