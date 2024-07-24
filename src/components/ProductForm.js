@@ -5,7 +5,9 @@ import {
   MenuItem,
   Box,
   IconButton,
-  Typography
+  Typography,
+  Switch,
+  FormControlLabel
 } from "@mui/material";
 import { useDropzone } from "react-dropzone";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,16 +20,18 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
     category: "",
     price: "",
     currency: "$",
-    images: []  // Asegurándote de que el campo se llama `images` y no `image`
+    images: [],
+    available: false,
+    offer: false
   });
   const [newBrand, setNewBrand] = useState("");
   const theme = useTheme();
 
   const handleChange = e => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setProduct(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === "checkbox" ? checked : value
     }));
   };
 
@@ -63,7 +67,9 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
       category: "",
       price: "",
       currency: "$",
-      images: []  // Reseteando correctamente el campo `images`
+      images: [],
+      available: false,
+      offer: false
     });
   };
 
@@ -143,6 +149,28 @@ const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
           <MenuItem value="u$">u$</MenuItem>
         </TextField>
       </Box>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={product.available}
+            onChange={handleChange}
+            name="available"
+            color="primary"
+          />
+        }
+        label="Disponible"
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={product.offer}
+            onChange={handleChange}
+            name="offer"
+            color="primary"
+          />
+        }
+        label="Oferta"
+      />
       <Box
         {...getRootProps()}
         sx={{

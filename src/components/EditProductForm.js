@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem } from "@mui/material";
+import React, { useState } from 'react';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+  MenuItem
+} from '@mui/material';
 
 const EditProductForm = ({ open, onClose, product, categories, brands, onSave }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
 
-  useEffect(() => {
-    setUpdatedProduct(product);
-  }, [product]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedProduct((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUpdatedProduct({ ...updatedProduct, [name]: value });
   };
 
   const handleSave = () => {
@@ -26,55 +27,67 @@ const EditProductForm = ({ open, onClose, product, categories, brands, onSave })
       <DialogTitle>Editar Producto</DialogTitle>
       <DialogContent>
         <TextField
-          label="Nombre del Producto"
+          margin="dense"
+          label="Nombre"
+          type="text"
           name="name"
-          value={updatedProduct.name || ""}
+          value={updatedProduct.name}
           onChange={handleChange}
           fullWidth
-          margin="normal"
         />
         <TextField
-          select
+          margin="dense"
           label="Marca"
+          type="text"
           name="brand"
-          value={updatedProduct.brand || ""}
+          value={updatedProduct.brand}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          select
         >
           {brands.map((brand) => (
-            <MenuItem key={brand.id} value={brand.name}>
-              {brand.name}
+            <MenuItem key={brand} value={brand}>
+              {brand}
             </MenuItem>
           ))}
         </TextField>
         <TextField
-          select
+          margin="dense"
           label="Categoría"
+          type="text"
           name="category"
-          value={updatedProduct.category || ""}
+          value={updatedProduct.category}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          select
         >
           {categories.map((category) => (
-            <MenuItem key={category.id} value={category.name}>
-              {category.name}
+            <MenuItem key={category} value={category}>
+              {category}
             </MenuItem>
           ))}
         </TextField>
         <TextField
+          margin="dense"
           label="Precio"
+          type="number"
           name="price"
-          value={updatedProduct.price || ""}
+          value={updatedProduct.price}
           onChange={handleChange}
           fullWidth
-          margin="normal"
         />
-        {/* Añadir otros campos según sea necesario */}
+        <TextField
+          margin="dense"
+          label="Proveedor"
+          type="text"
+          name="supplier"
+          value={updatedProduct.supplier}
+          onChange={handleChange}
+          fullWidth
+        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="primary">
           Cancelar
         </Button>
         <Button onClick={handleSave} color="primary">
@@ -85,4 +98,5 @@ const EditProductForm = ({ open, onClose, product, categories, brands, onSave })
   );
 };
 
-export default EditProductForm;
+export default EditProductForm
+

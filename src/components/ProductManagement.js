@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Grid, Paper, Box, Button } from "@mui/material";
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Box,
+  Switch,
+} from "@mui/material";
 import { db } from "../firebaseConfig";
 import {
   collection,
@@ -11,18 +23,20 @@ import {
 import { useTheme } from "@mui/material/styles";
 import EditProductForm from "./EditProductForm";
 import SearchInput from "./SearchInput";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Image from "next/image";
 
 const ProductManagement = ({ categories, brands }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
+  const theme = useTheme();
 
-  const filteredProducts = products
-    .filter(product =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -63,6 +77,26 @@ const ProductManagement = ({ categories, brands }) => {
     setSelectedProduct(null);
   };
 
+  const toggleAvailable = async (id, available) => {
+    const productRef = doc(db, "products", id);
+    await updateDoc(productRef, { available: !available });
+    setProducts(
+      products.map(product =>
+        product.id === id ? { ...product, available: !available } : product
+      )
+    );
+  };
+
+  const toggleOffer = async (id, offer) => {
+    const productRef = doc(db, "products", id);
+    await updateDoc(productRef, { offer: !offer });
+    setProducts(
+      products.map(product =>
+        product.id === id ? { ...product, offer: !offer } : product
+      )
+    );
+  };
+
   return (
     <Container maxWidth="lg">
       <Box mt={4}>
@@ -70,43 +104,96 @@ const ProductManagement = ({ categories, brands }) => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
         />
-        <Grid container spacing={4}>
-          {filteredProducts.map(product =>
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
-              <Paper sx={{ padding: theme.spacing(2) }}>
-                <Typography variant="h6">
-                  {product.name}
-                </Typography>
-                <Typography variant="body1">
-                  Marca: {product.brand}
-                </Typography>
-                <Typography variant="body1">
-                  Categoría: {product.category}
-                </Typography>
-                <Typography variant="body1">
-                  Precio: ${product.price}
-                </Typography>
-                <Box mt={2}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleEditOpen(product)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteProduct(product.id)}
-                    sx={{ ml: 2 }}
-                  >
-                    Eliminar
-                  </Button>
-                </Box>
-              </Paper>
-            </Grid>
-          )}
-        </Grid>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Marca</TableCell>
+                <TableCell>Categoría</TableCell>
+                <TableCell>Precio</TableCell>
+                <TableCell>Imagen 1</TableCell>
+                <TableCell>Imagen 2</TableCell>
+                <TableCell>Imagen 3</TableCell>
+                <TableCell>Disponible</TableCell>
+                <TableCell>Oferta</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredProducts.map(product =>
+                <TableRow key={product.id}>
+                  <TableCell>
+                    {product.name}
+                  </TableCell>
+                  <TableCell>
+                    {product.brand}
+                  </TableCell>
+                  <TableCell>
+                    {product.category}
+                  </TableCell>
+                  <TableCell>
+                    {product.currency} {product.price}
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[1]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Image
+                      src={product.images[2]}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={product.available}
+                      color="primary"
+                      onChange={() => toggleAvailable(product.id, product.available)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={product.offer}
+                      color="primary"
+                      onChange={() => toggleOffer(product.id, product.offer)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditOpen(product)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
       {selectedProduct &&
         <EditProductForm
