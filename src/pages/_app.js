@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../styles/theme";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import "../styles/globals.css";
 
 export default function MyApp(props) {
@@ -20,7 +21,7 @@ export default function MyApp(props) {
   return (
     <React.Fragment>
       <Head>
-        <title>Administración Distribuidora</title>
+        <title>WildStore - Tecnología </title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -30,6 +31,7 @@ export default function MyApp(props) {
         <CssBaseline />
         <NavBar />
         <Component {...pageProps} />
+        <Footer/>
       </ThemeProvider>
     </React.Fragment>
   );
