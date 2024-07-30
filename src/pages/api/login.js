@@ -1,5 +1,6 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import bcrypt from "bcryptjs";
+
 import { db } from "../../firebaseConfig";
 
 export default async function handler(req, res) {
