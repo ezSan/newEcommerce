@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Badge, Box } from '@mui/material';
+import { ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import RegisterModal from './RegisterModal';
+import LoginModal from './LoginModal';
+import UserMenu from './UserMenu';
 import { useTheme } from '@mui/material/styles';
 
 export default function NavBar() {
   const theme = useTheme();
   const router = useRouter();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   const handleOpenRegister = () => {
     setIsRegisterOpen(true);
@@ -17,6 +22,22 @@ export default function NavBar() {
     setIsRegisterOpen(false);
   };
 
+  const handleOpenLogin = () => {
+    setIsLoginOpen(true);
+  };
+
+  const handleCloseLogin = () => {
+    setIsLoginOpen(false);
+  };
+
+  const handleLoginSuccess = (user) => {
+    setUser(user);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
   return (
     <AppBar position="static">
       <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -24,19 +45,29 @@ export default function NavBar() {
           <Typography variant="h6">wildTech</Typography>
         </Button>
 
-        <div>
-          <Button color="inherit" onClick={() => router.push('/Questions')}>
-            Preguntas frecuentes
-          </Button>
-          <Button color="inherit" onClick={() => router.push('/PanelAdmin')}>
-            Administrador
-          </Button>
-          <Button color="inherit" onClick={handleOpenRegister}>
-            Registrarse
-          </Button>
-        </div>
+        <Box display="flex" alignItems="center">
+          <IconButton color="inherit" onClick={() => router.push('/cart')}>
+            <Badge badgeContent={0} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+
+          {user ? (
+            <UserMenu user={user} onLogout={handleLogout} />
+          ) : (
+            <>
+              <Button color="inherit" onClick={handleOpenLogin}>
+                Iniciar sesión
+              </Button>
+              <Button color="inherit" onClick={handleOpenRegister}>
+                Registrarse
+              </Button>
+            </>
+          )}
+        </Box>
       </Toolbar>
       <RegisterModal open={isRegisterOpen} onClose={handleCloseRegister} />
+      <LoginModal open={isLoginOpen} onClose={handleCloseLogin} onLoginSuccess={handleLoginSuccess} />
     </AppBar>
   );
 }

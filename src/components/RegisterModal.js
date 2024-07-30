@@ -76,7 +76,9 @@ const RegisterModal = ({ open, onClose }) => {
         name: form.name,
         lastName: form.lastName,
         address: form.address,
-        phoneNumber: form.phoneNumber
+        city: form.city,
+        phoneNumber: form.phoneNumber,
+        isAdmin: false // Asignar falso por defecto
       });
 
       resetForm();
