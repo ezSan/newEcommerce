@@ -7,6 +7,8 @@ import theme from "../styles/theme";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
+import { Provider } from 'react-redux';
+import store from '../store/store.js';
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -21,17 +23,19 @@ export default function MyApp(props) {
   return (
     <React.Fragment>
       <Head>
-        <title>WildStore - Tecnología </title>
+        <title>WildStore - Tecnología</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <NavBar />
-        <Component {...pageProps} />
-        <Footer/>
+        <Provider store={store}>
+          <CssBaseline />
+          <NavBar />
+          <Component {...pageProps} />
+          <Footer />
+        </Provider>
       </ThemeProvider>
     </React.Fragment>
   );
@@ -39,5 +43,5 @@ export default function MyApp(props) {
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired
+  pageProps: PropTypes.object.isRequired,
 };
