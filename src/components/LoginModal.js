@@ -1,4 +1,3 @@
-// LoginModal.js
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -39,10 +38,10 @@ const LoginModal = ({ open, onClose }) => {
 
       if (response.ok) {
         const data = await response.json();
-        dispatch(setUser(data.user)); // Despacha la acción para actualizar el usuario en el estado global
+        dispatch(setUser(data.user));
         resetForm();
         onClose();
-        router.push('/'); // Redirige a la página principal o a cualquier otra página
+        router.push('/');
       } else {
         const errorData = await response.json();
         setError(errorData.message);
