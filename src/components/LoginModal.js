@@ -38,6 +38,11 @@ const LoginModal = ({ open, onClose }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Login response data:", data); // Verifica la respuesta
+
+        // Establecer el token en las cookies
+        document.cookie = `token=${data.token}; path=/; max-age=${60 * 60}`; // 1 hora de expiración
+
         dispatch(setUser(data.user));
         resetForm();
         onClose();
@@ -47,6 +52,7 @@ const LoginModal = ({ open, onClose }) => {
         setError(errorData.message);
       }
     } catch (error) {
+      console.error("Error during login request:", error);
       setError('Error de conexión. Inténtelo de nuevo más tarde.');
     }
   };
