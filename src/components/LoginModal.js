@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux'; // Importa useDispatch para despachar acciones
+import { setUser } from '../store/actions/userActions'; // Importa tu acción para setear el usuario
 
-const LoginModal = ({ open, onClose, onLoginSuccess }) => {
+const LoginModal = ({ open, onClose }) => {
   const theme = useTheme();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const router = useRouter();
+  const dispatch = useDispatch(); // Obtén la función dispatch de Redux
 
   const handleChange = (e) => {
     setForm({
@@ -35,14 +38,21 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
 
       if (response.ok) {
         const data = await response.json();
-        onLoginSuccess(data.user);
+        console.log("Login response data:", data); // Verifica la respuesta
+
+        // Establecer el token en las cookies
+        document.cookie = `token=${data.token}; path=/; max-age=${60 * 60}`; // 1 hora de expiración
+
+        dispatch(setUser(data.user));
         resetForm();
         onClose();
+        router.push('/');
       } else {
         const errorData = await response.json();
         setError(errorData.message);
       }
     } catch (error) {
+      console.error("Error during login request:", error);
       setError('Error de conexión. Inténtelo de nuevo más tarde.');
     }
   };

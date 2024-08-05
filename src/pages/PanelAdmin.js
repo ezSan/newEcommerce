@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Grid, Paper, Box, Tabs, Tab } from "@mui/material";
-import { db, storage } from "../firebaseConfig";
+import { Container, Grid, Paper, Tabs, Tab } from "@mui/material";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../firebaseConfig";
 import ProductForm from "../components/ProductForm";
 import ItemsReadyToPushIntoFirebase from "../components/ItemsReadyToPushIntoFirebase";
 import ProductManagement from "../components/ProductManagement";
-import SalesManagement from "../components/SalesManagement"
-import ClientsManagement from "../components/ClientsManagement"
+import SalesManagement from "../components/SalesManagement";
+import ClientsManagement from "../components/ClientsManagement";
 import { useTheme } from "@mui/material/styles";
+import jwt from "jsonwebtoken";
+import { parseCookies } from "nookies";
 
 const PanelAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -51,7 +53,7 @@ const PanelAdmin = () => {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = product => {
+  const handleAddProduct = (product) => {
     setProducts([...products, product]);
   };
 
@@ -65,18 +67,20 @@ const PanelAdmin = () => {
   const handleConfirm = async () => {
     try {
       for (const product of products) {
-        const imageUrls = await Promise.all(product.images.map(async (image) => {
-          const storageRef = ref(storage, `products/${image.name}`);
-          await uploadBytes(storageRef, image);
-          const url = await getDownloadURL(storageRef);
-          return url;
-        }));
-  
+        const imageUrls = await Promise.all(
+          product.images.map(async (image) => {
+            const storageRef = ref(storage, `products/${image.name}`);
+            await uploadBytes(storageRef, image);
+            const url = await getDownloadURL(storageRef);
+            return url;
+          })
+        );
+
         const productWithImageURLs = {
           ...product,
-          images: imageUrls,  // Asegurándote de que el campo es `images` en plural
+          images: imageUrls,
         };
-  
+
         const productsRef = collection(db, "products");
         await addDoc(productsRef, productWithImageURLs);
       }
@@ -149,5 +153,54 @@ const PanelAdmin = () => {
   );
 };
 
-export default PanelAdmin;
+export async function getServerSideProps(context) {
+  console.log("getServerSideProps is running");
 
+  const { req } = context;
+  const cookies = parseCookies({ req });
+  const token = cookies.token;
+
+  console.log('Cookies received:', cookies);
+  console.log('Token from cookies:', token);
+
+  if (!token) {
+    console.log('No token found, redirecting...');
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
+    console.log('Decoded JWT:', decoded);
+
+    if (!decoded.isAdmin) {
+      console.log('User is not admin, redirecting...');
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {},
+    };
+  } catch (error) {
+    console.error('JWT verification error:', error);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+}
+
+
+
+export default PanelAdmin;

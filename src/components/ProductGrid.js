@@ -4,11 +4,14 @@ import ProductCard from "./ProductCard";
 import Sidebar from "./Sidebar";
 import SearchInput from "./SearchInput";
 import { useTheme } from "@mui/material/styles";
+import { useSelector } from 'react-redux';
 
 const ProductGrid = ({ products, categories = [] }) => {
   const theme = useTheme();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const user = useSelector((state) => state.user);
 
   const filteredProducts = products
     .filter(product =>
