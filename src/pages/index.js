@@ -1,4 +1,3 @@
-// pages/index.js
 import { Container, Grid, Paper, Typography } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import React, { useEffect, useState } from "react";
