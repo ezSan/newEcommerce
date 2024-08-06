@@ -25,6 +25,11 @@ typography: {
     fontSize: '48px',
     fontWeight: 600,
   },
+  
+  h5: {
+    fontSize: '24px',
+    fontWeight: 600,
+  },
   body1: {
     fontSize: '1rem',
   },

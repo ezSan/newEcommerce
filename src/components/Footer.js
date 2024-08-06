@@ -11,7 +11,7 @@ const Footer = () => {
         © {new Date().getFullYear()} wildTech. Todos los derechos reservados.
       </Typography>
       <Box mt={1}>
-        <Link href="#" onClick={() => router.push('/Questions')} color="inherit">
+        <Link href="#" onClick={() => router.push('/Faq')} color="inherit">
           Preguntas frecuentes
         </Link>
         {' | '}
