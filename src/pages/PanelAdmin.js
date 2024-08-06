@@ -167,7 +167,7 @@ export async function getServerSideProps(context) {
     console.log('No token found, redirecting...');
     return {
       redirect: {
-        destination: "/",
+        destination: "/Unauthorized",
         permanent: false,
       },
     };
@@ -181,7 +181,7 @@ export async function getServerSideProps(context) {
       console.log('User is not admin, redirecting...');
       return {
         redirect: {
-          destination: "/",
+          destination: "/Unauthorized",
           permanent: false,
         },
       };
@@ -194,7 +194,7 @@ export async function getServerSideProps(context) {
     console.error('JWT verification error:', error);
     return {
       redirect: {
-        destination: "/",
+        destination: "/Unauthorized",
         permanent: false,
       },
     };
