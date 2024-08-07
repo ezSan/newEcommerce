@@ -17,6 +17,7 @@ export default function NavBar() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.user);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleOpenRegister = () => {
     setIsRegisterOpen(true);
@@ -38,6 +39,9 @@ export default function NavBar() {
     dispatch(logout());
   };
 
+  // Calcula el número total de artículos en el carrito
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   return (
     <AppBar position="static">
       <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -47,7 +51,7 @@ export default function NavBar() {
 
         <Box display="flex" alignItems="center">
           <IconButton color="inherit" onClick={() => router.push('/cart')}>
-            <Badge badgeContent={0} color="error">
+            <Badge badgeContent={totalItems} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>

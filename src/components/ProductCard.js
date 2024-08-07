@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Card, CardContent, CardMedia, Typography, Button, IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { addToCart } from '../store/actions/cartActions';
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const dispatch = useDispatch();
 
   const handleAdd = () => {
     setQuantity(quantity + 1);
@@ -29,6 +32,11 @@ const ProductCard = ({ product }) => {
     );
   };
 
+  const handleAddToCart = () => {
+    const productWithQuantity = { ...product, quantity };
+    dispatch(addToCart(productWithQuantity));
+  };
+
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
       <Box sx={{ position: 'relative', width: '100%', height: '200px' }}>
@@ -38,8 +46,7 @@ const ProductCard = ({ product }) => {
               sx={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)', zIndex: 1, padding: '8px' }}
               onClick={handlePrevImage}
             >
-            <ArrowForwardIosIcon />
-              
+              <ArrowForwardIosIcon />
             </IconButton>
             <IconButton
               sx={{ position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)', zIndex: 1, padding: '8px' }}
@@ -75,7 +82,7 @@ const ProductCard = ({ product }) => {
             <AddIcon />
           </IconButton>
         </Box>
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleAddToCart}>
           Añadir al Carrito
         </Button>
       </CardContent>
