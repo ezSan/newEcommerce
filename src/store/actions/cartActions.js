@@ -6,7 +6,9 @@ export const addToCart = product => ({
   payload: product
 });
 
-export const removeFromCart = productId => ({
+export const removeFromCart = product => ({
   type: REMOVE_FROM_CART,
-  payload: { id: productId }
+  payload: product
 });
+
+
