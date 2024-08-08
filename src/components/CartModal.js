@@ -18,10 +18,12 @@ const CartModal = ({ open, onClose }) => {
 
   const handleCheckout = () => {
     if (user) {
+      const adminNumber = 2916496692;
       const orderDetails = cartItems.map(item => `${item.name} (x${item.quantity})`).join(', ');
-      const whatsappMessage = `Hola, me gustaría realizar el siguiente pedido: ${orderDetails}. Total: ${totalAmount.toFixed(2)}`;
-      const whatsappLink = `https://wa.me/1234567890?text=${encodeURIComponent(whatsappMessage)}`;
-      window.location.href = whatsappLink;
+      const userDetails = `Nombre: ${user.name}, Localidad: ${user.city}, Dirección: ${user.address}`;
+      const whatsappMessage = `Hola, me gustaría realizar el siguiente pedido: ${orderDetails}. Total: ${totalAmount.toFixed(2)}. Los datos para el envío son: ${userDetails}`;
+      const whatsappLink = `https://wa.me/${adminNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappLink, '_blank');
     } else {
       alert('Debes iniciar sesión para finalizar la compra');
     }
