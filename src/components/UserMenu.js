@@ -38,14 +38,14 @@ const UserMenu = ({ user, onLogout }) => {
         onClose={handleClose}
       >
         {user.isAdmin && (
-          <MenuItem onClick={() => router.push('/PanelAdmin')}>
+          <MenuItem onClick={() => { handleClose(); router.push('/PanelAdmin'); }}>
             <DashboardIcon style={{ marginRight: '10px' }} /> Panel Admin
           </MenuItem>
         )}
-        <MenuItem onClick={() => router.push('/notifications')}>
+        <MenuItem onClick={() => { handleClose(); router.push('/notifications'); }}>
           <NotificationsIcon style={{ marginRight: '10px' }} /> Notificaciones
         </MenuItem>
-        <MenuItem onClick={() => router.push('/wishlist')}>
+        <MenuItem onClick={() => { handleClose(); router.push('/wishlist'); }}>
           <FavoriteIcon style={{ marginRight: '10px' }} /> Wishlist
         </MenuItem>
         <MenuItem onClick={handleLogout}>

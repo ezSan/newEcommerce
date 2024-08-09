@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { db } from "../../firebaseConfig";
@@ -19,7 +19,14 @@ export default async function handler(req, res) {
 
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
-      console.log(userData.isAdmin);
+      const userId = userDoc.id;
+
+      // Check if userId is already present, if not add it
+      if (!userData.userId) {
+        const userRef = doc(db, "clients", userId);
+        await updateDoc(userRef, { userId });
+        userData.userId = userId; // Update the local object to include the userId
+      }
 
       const isMatch = await bcrypt.compare(password, userData.password);
       if (!isMatch) {
@@ -27,7 +34,7 @@ export default async function handler(req, res) {
       }
 
       const token = jwt.sign(
-        { userId: userDoc.id, isAdmin: userData.isAdmin },
+        { userId, isAdmin: userData.isAdmin },
         secretKey,
         { expiresIn: "1h" }
       );

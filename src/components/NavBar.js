@@ -8,15 +8,18 @@ import UserMenu from './UserMenu';
 import { useTheme } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/actions/userActions';
+import CartModal from './CartModal';
 
 export default function NavBar() {
   const theme = useTheme();
   const router = useRouter();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false); 
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.user);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleOpenRegister = () => {
     setIsRegisterOpen(true);
@@ -38,36 +41,49 @@ export default function NavBar() {
     dispatch(logout());
   };
 
+  const handleOpenCart = () => {
+    setIsCartOpen(true);
+  };
+
+  const handleCloseCart = () => {
+    setIsCartOpen(false);
+  };
+
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   return (
-    <AppBar position="static">
-      <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button color="inherit" onClick={() => router.push('/')}>
-          <Typography variant="h6">wildTech</Typography>
-        </Button>
+    <>
+      <AppBar position="static">
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button color="inherit" onClick={() => router.push('/')}>
+            <Typography variant="h6">wildTech</Typography>
+          </Button>
 
-        <Box display="flex" alignItems="center">
-          <IconButton color="inherit" onClick={() => router.push('/cart')}>
-            <Badge badgeContent={0} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
+          <Box display="flex" alignItems="center">
+            <IconButton color="inherit" onClick={handleOpenCart}>
+              <Badge badgeContent={totalItems} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
 
-          {user ? (
-            <UserMenu user={user} onLogout={handleLogout} />
-          ) : (
-            <>
-              <Button color="inherit" onClick={handleOpenLogin}>
-                Iniciar sesión
-              </Button>
-              <Button color="inherit" onClick={handleOpenRegister}>
-                Registrarse
-              </Button>
-            </>
-          )}
-        </Box>
-      </Toolbar>
-      <RegisterModal open={isRegisterOpen} onClose={handleCloseRegister} />
-      <LoginModal open={isLoginOpen} onClose={handleCloseLogin} />
-    </AppBar>
+            {user ? (
+              <UserMenu user={user} onLogout={handleLogout} />
+            ) : (
+              <>
+                <Button color="inherit" onClick={handleOpenLogin}>
+                  Iniciar sesión
+                </Button>
+                <Button color="inherit" onClick={handleOpenRegister}>
+                  Registrarse
+                </Button>
+              </>
+            )}
+          </Box>
+        </Toolbar>
+        <RegisterModal open={isRegisterOpen} onClose={handleCloseRegister} />
+        <LoginModal open={isLoginOpen} onClose={handleCloseLogin} />
+      </AppBar>
+      <CartModal open={isCartOpen} onClose={handleCloseCart} /> 
+    </>
   );
 }
