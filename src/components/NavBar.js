@@ -8,14 +8,14 @@ import UserMenu from './UserMenu';
 import { useTheme } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/actions/userActions';
-import CartModal from './CartModal'; // Importa el componente CartModal
+import CartModal from './CartModal';
 
 export default function NavBar() {
   const theme = useTheme();
   const router = useRouter();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para el modal del carrito
+  const [isCartOpen, setIsCartOpen] = useState(false); 
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.user);
@@ -83,7 +83,7 @@ export default function NavBar() {
         <RegisterModal open={isRegisterOpen} onClose={handleCloseRegister} />
         <LoginModal open={isLoginOpen} onClose={handleCloseLogin} />
       </AppBar>
-      <CartModal open={isCartOpen} onClose={handleCloseCart} /> {/* Modal del carrito */}
+      <CartModal open={isCartOpen} onClose={handleCloseCart} /> 
     </>
   );
 }
