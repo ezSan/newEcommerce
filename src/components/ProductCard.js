@@ -65,7 +65,7 @@ const ProductCard = ({ product }) => {
         />
       </Box>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <Typography gutterBottom variant="h5" component="div" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <Typography gutterBottom variant="body4" component="div" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight:'600' }}>
           {product.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">

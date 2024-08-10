@@ -2,6 +2,7 @@ import { Container, Grid, Paper, Typography } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import React, { useEffect, useState } from "react";
 import ProductGrid from "../components/ProductGrid";
+
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
@@ -12,7 +13,10 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const productsSnapshot = await getDocs(collection(db, "products"));
-      const productsList = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const productsList = productsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
       setProducts(productsList);
 
       const categoriesSnapshot = await getDocs(collection(db, "categories"));
@@ -23,5 +27,11 @@ export default function Home() {
     fetchData();
   }, []);
 
-  return <ProductGrid products={products} categories={categories} />;
+  return (
+    <Container>
+ 
+
+      <ProductGrid products={products} categories={categories} />
+    </Container>
+  );
 }
