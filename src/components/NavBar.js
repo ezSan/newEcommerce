@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/actions/userActions';
 import CartModal from './CartModal';
+import DollarRate from './DollarRate'; // Import the DollarRate component
 
 export default function NavBar() {
   const theme = useTheme();
@@ -60,6 +61,7 @@ export default function NavBar() {
           </Button>
 
           <Box display="flex" alignItems="center">
+            <DollarRate/>
             <IconButton color="inherit" onClick={handleOpenCart}>
               <Badge badgeContent={totalItems} color="error">
                 <ShoppingCartIcon />
@@ -69,14 +71,14 @@ export default function NavBar() {
             {user ? (
               <UserMenu user={user} onLogout={handleLogout} />
             ) : (
-              <>
+              <Box display="flex" flexDirection="column" alignItems="center">
                 <Button color="inherit" onClick={handleOpenLogin}>
                   Iniciar sesión
                 </Button>
                 <Button color="inherit" onClick={handleOpenRegister}>
                   Registrarse
                 </Button>
-              </>
+              </Box>
             )}
           </Box>
         </Toolbar>
