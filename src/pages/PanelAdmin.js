@@ -20,38 +20,50 @@ const PanelAdmin = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const theme = useTheme();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
+  const fetchCategories = async () => {
+    try {
       const querySnapshot = await getDocs(collection(db, "categories"));
       const categoriesList = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       setCategories(categoriesList);
-    };
+    } catch (error) {
+      console.error("Error fetching categories: ", error);
+    }
+  };
 
-    const fetchBrands = async () => {
+  const fetchBrands = async () => {
+    try {
       const querySnapshot = await getDocs(collection(db, "brands"));
       const brandsList = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       setBrands(brandsList);
-    };
+    } catch (error) {
+      console.error("Error fetching brands: ", error);
+    }
+  };
 
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
+    try {
       const querySnapshot = await getDocs(collection(db, "products"));
       const productsList = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       setDbProducts(productsList);
-    };
+    } catch (error) {
+      console.error("Error fetching products: ", error);
+    }
+  };
 
+  useEffect(() => {
     fetchCategories();
     fetchBrands();
     fetchProducts();
-  }, []);
+  }, []); // Si no necesitas que se vuelvan a ejecutar cuando cambien categorías, marcas o productos, puedes mantener las dependencias vacías.
 
   const handleAddProduct = (product) => {
     setProducts([...products, product]);
@@ -85,12 +97,7 @@ const PanelAdmin = () => {
         await addDoc(productsRef, productWithImageURLs);
       }
       setProducts([]);
-      const querySnapshot = await getDocs(collection(db, "products"));
-      const productsList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setDbProducts(productsList);
+      fetchProducts(); // Re-fetch products after adding new ones
     } catch (error) {
       console.error("Error adding products: ", error);
     }
@@ -200,7 +207,5 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
-
 
 export default PanelAdmin;

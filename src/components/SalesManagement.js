@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Grid, Paper, Box, Button } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 import { db } from "../firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc
-} from "firebase/firestore";
-import { useTheme } from "@mui/material/styles";
+import { collection, getDocs } from "firebase/firestore";
+import SalesTable from "./SalesTable";
 
 export default function SalesManagement() {
-  return (<Container maxWidth="lg">
-    <Box mt={4}>
-      <Typography variant="h6">
-      Ventas
-      </Typography>
-    </Box>
-   
-  </Container>
-  
-  )
+  const [sales, setSales] = useState([]);
+
+  useEffect(() => {
+    const fetchSales = async () => {
+      const salesSnapshot = await getDocs(collection(db, "sales"));
+      const salesList = salesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setSales(salesList);
+    };
+
+    fetchSales();
+  }, []);
+
+  return (
+    <Container maxWidth="lg">
+      <Box mt={4}>
+            <SalesTable sales={sales} />
+      </Box>
+    </Container>
+  );
 }

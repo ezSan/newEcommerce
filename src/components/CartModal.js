@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,19 +11,22 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { removeFromCart } from "../store/actions/cartActions";
+import { removeFromCart, clearCart } from "../store/actions/cartActions";
 import { db } from "../firebaseConfig.js";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 const CartModal = ({ open, onClose }) => {
   const cartItems = useSelector(state => state.cart.items);
   const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
+  const [successMessage, setSuccessMessage] = useState(false);
 
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -33,6 +36,7 @@ const CartModal = ({ open, onClose }) => {
   const handleRemoveFromCart = item => {
     dispatch(removeFromCart(item));
   };
+
 
   const handleCheckout = async () => {
     if (user) {
@@ -48,104 +52,130 @@ const CartModal = ({ open, onClose }) => {
         whatsappMessage
       )}`;
 
+      console.log(user);
+      if (!user.userId) {
+        console.error("El ID del usuario no está definido.");
+        return;
+      }
+
       try {
         await addDoc(collection(db, "sales"), {
-          userId:user.id,
+          userId: user.userId,
           userName: user.name,
+          userLastName: user.lastName,
           userCity: user.city,
           userAddress: user.address,
           items: cartItems,
           totalAmount,
           createdAt: new Date()
         });
-        console.log("Venta guardada en Firestore");
+        console.log("Venta guardada en Firestore");      
+        dispatch(clearCart());        
+        setSuccessMessage(true);       
+        window.open(whatsappLink, "_blank");
       } catch (error) {
         console.error("Error guardando la venta: ", error);
       }
-
-      window.open(whatsappLink, "_blank");
     } else {
       alert("Debes iniciar sesión para finalizar la compra");
     }
   };
 
+  const handleSnackbarClose = () => {
+    setSuccessMessage(false);
+    onClose(); 
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      sx={{ overflowX: "hidden" }}
-    >
-      <DialogTitle>
-        Carrito de Compras
-        <IconButton
-          edge="end"
-          color="inherit"
-          onClick={onClose}
-          aria-label="close"
-          style={{ position: "absolute", right: 8, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        {cartItems.length === 0
-          ? <Typography variant="body1">Tu carrito está vacío.</Typography>
-          : <List>
-              {cartItems.map(item =>
-                <ListItem key={item.id}>
-                  <ListItemText
-                    primary={`${item.name} (x${item.quantity})`}
-                    secondary={`${item.currency} ${item.price * item.quantity}`}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleRemoveFromCart(item)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              )}
-            </List>}
-      </DialogContent>
-      <DialogActions>
-        <Box display="flex" justifyContent="space-between" width="100%">
-          <Typography variant="h6">
-            Total: {totalAmount.toFixed(2)}
-          </Typography>
-          <Box display="flex" alignItems="center">
-            {!user &&
-              <Typography
-                variant="body2"
-                color="error"
-                style={{ marginRight: "8px" }}
+    <>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        sx={{ overflowX: "hidden" }}
+      >
+        <DialogTitle>
+          Carrito de Compras
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close"
+            style={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {cartItems.length === 0
+            ? <Typography variant="body1">Tu carrito está vacío.</Typography>
+            : <List>
+                {cartItems.map(item =>
+                  <ListItem key={item.id}>
+                    <ListItemText
+                      primary={`${item.name} (x${item.quantity})`}
+                      secondary={`${item.currency} ${item.price * item.quantity}`}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleRemoveFromCart(item)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                )}
+              </List>}
+        </DialogContent>
+        <DialogActions>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6">
+              Total: {totalAmount.toFixed(2)}
+            </Typography>
+            <Box display="flex" alignItems="center">
+              {!user &&
+                <Typography
+                  variant="body2"
+                  color="error"
+                  style={{ marginRight: "8px" }}
+                >
+                  Debes iniciar sesión para finalizar la compra
+                </Typography>}
+              <Button
+                onClick={handleCheckout}
+                color="primary"
+                variant="contained"
+                disabled={!user}
               >
-                Debes iniciar sesión para finalizar la compra
-              </Typography>}
-            <Button
-              onClick={handleCheckout}
-              color="primary"
-              variant="contained"
-              disabled={!user}
-            >
-              Finalizar Compra
-            </Button>
-            <Button
-              onClick={onClose}
-              color="secondary"
-              variant="outlined"
-              style={{ marginLeft: "8px" }}
-            >
-              Cerrar
-            </Button>
+                Finalizar Compra
+              </Button>
+              <Button
+                onClick={onClose}
+                color="secondary"
+                variant="outlined"
+                style={{ marginLeft: "8px" }}
+              >
+                Cerrar
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
+
+      
+      <Snackbar
+        open={successMessage}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          Compra gestionada con éxito
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

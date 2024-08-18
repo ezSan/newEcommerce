@@ -20,7 +20,7 @@ export default function Home() {
       setProducts(productsList);
 
       const categoriesSnapshot = await getDocs(collection(db, "categories"));
-      const categoriesList = categoriesSnapshot.docs.map(doc => doc.id); // Assuming category names are the document IDs
+      const categoriesList = categoriesSnapshot.docs.map(doc => doc.id); 
       setCategories(categoriesList);
     };
 

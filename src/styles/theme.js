@@ -57,12 +57,11 @@ const theme = createTheme({
         },
       },
     },
-    MuiCard: {
+    MuiSelect: {
       styleOverrides: {
         root: {
-          padding: '16px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          margin: '8px 0',
+          padding: '10px',
         },
       },
     },
@@ -84,5 +83,4 @@ const theme = createTheme({
     },
   },
 });
-
 export default theme;

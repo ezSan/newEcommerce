@@ -36,23 +36,19 @@ export default function Ventas() {
   }, []);
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>
-        Gestión de ventas
-      </Typography>
+    <Container maxWidth="lg">      
       <Paper style={{ padding: theme.spacing(2), marginTop: theme.spacing(2) }}>
         <List>
           {orders.map(order =>
             <ListItem key={order.id}>
-              <ListItemText
-                
+              <ListItemText                
                 primary={` ${order.cliente.nombre} ${order.cliente.apellido}`}
                 secondary={`${order.invoiceType}`}
               />
               <Typography>
                 ${order.total}
               </Typography>
-              {/* Aquí puedes agregar más detalles de la orden si es necesario */}
+              
             </ListItem>
           )}
         </List>
