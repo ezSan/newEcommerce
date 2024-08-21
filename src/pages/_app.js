@@ -7,8 +7,8 @@ import theme from "../styles/theme";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
-import { Provider } from 'react-redux';
-import store from '../store/store.js';
+import { Provider } from "react-redux";
+import store from "../store/store.js";
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -43,5 +43,5 @@ export default function MyApp(props) {
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
+  pageProps: PropTypes.object.isRequired
 };

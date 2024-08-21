@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   IconButton,
   TableSortLabel
 } from "@mui/material";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 import { format } from "date-fns";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
@@ -24,6 +24,20 @@ export default function SalesTable({ sales }) {
   const [paymentMethod, setPaymentMethod] = useState("Pendiente");
   const [orderBy, setOrderBy] = useState("date");
   const [orderDirection, setOrderDirection] = useState("asc");
+  const [clients, setClients] = useState({});
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      const querySnapshot = await getDocs(collection(db, "clients"));
+      const clientsMap = {};
+      querySnapshot.forEach(doc => {
+        clientsMap[doc.id] = doc.data();
+      });
+      setClients(clientsMap);
+    };
+
+    fetchClients();
+  }, []);
 
   const handleStatusChange = async (sale, newStatus) => {
     const saleRef = doc(db, "sales", sale.id);
@@ -39,7 +53,7 @@ export default function SalesTable({ sales }) {
     setPaymentMethod(newMethod);
   };
 
-  const handleSort = (column) => {
+  const handleSort = column => {
     const isAsc = orderBy === column && orderDirection === "asc";
     setOrderDirection(isAsc ? "desc" : "asc");
     setOrderBy(column);
@@ -54,7 +68,13 @@ export default function SalesTable({ sales }) {
       return order * (a.totalAmount - b.totalAmount);
     }
     if (orderBy === "client") {
-      return order * `${a.userName} ${a.userLastName}`.localeCompare(`${b.userName} ${b.userLastName}`);
+      const clientA = clients[a.userId]
+        ? `${clients[a.userId].name} ${clients[a.userId].lastName}`
+        : "";
+      const clientB = clients[b.userId]
+        ? `${clients[b.userId].name} ${clients[b.userId].lastName}`
+        : "";
+      return order * clientA.localeCompare(clientB);
     }
     return 0;
   });
@@ -103,12 +123,19 @@ export default function SalesTable({ sales }) {
           {sortedSales.map(sale => {
             const saleDate = sale.createdAt.toDate();
             const formattedDate = format(saleDate, "dd/MM/yy");
+            const client = clients[sale.userId];
 
             return (
               <React.Fragment key={sale.id}>
                 <TableRow>
-                  <TableCell>{`${sale.userName} ${sale.userLastName}`}</TableCell>
-                  <TableCell>{formattedDate}</TableCell>
+                  <TableCell>
+                    {client
+                      ? `${client.name} ${client.lastName}`
+                      : "Cliente no encontrado"}
+                  </TableCell>
+                  <TableCell>
+                    {formattedDate}
+                  </TableCell>
                   <TableCell>{`$${sale.totalAmount}`}</TableCell>
                   <TableCell>
                     <Select
@@ -125,7 +152,8 @@ export default function SalesTable({ sales }) {
                   <TableCell>
                     <Select
                       value={sale.paymentMethod || "Pendiente"}
-                      onChange={e => handlePaymentMethodChange(sale, e.target.value)}
+                      onChange={e =>
+                        handlePaymentMethodChange(sale, e.target.value)}
                       fullWidth
                     >
                       <MenuItem value="Pendiente">Pendiente</MenuItem>
@@ -137,26 +165,30 @@ export default function SalesTable({ sales }) {
                   </TableCell>
                   <TableCell>
                     <IconButton
-                      onClick={() => setSelectedSale(selectedSale === sale.id ? null : sale.id)}
+                      onClick={() =>
+                        setSelectedSale(
+                          selectedSale === sale.id ? null : sale.id
+                        )}
                     >
-                      {selectedSale === sale.id ? <ExpandLess /> : <ExpandMore />}
+                      {selectedSale === sale.id
+                        ? <ExpandLess />
+                        : <ExpandMore />}
                     </IconButton>
                   </TableCell>
                 </TableRow>
-                {selectedSale === sale.id && (
+                {selectedSale === sale.id &&
                   <TableRow>
                     <TableCell colSpan={6}>
                       <Typography variant="subtitle1">Productos:</Typography>
                       <ul>
-                        {sale.items.map(product => (
+                        {sale.items.map(product =>
                           <li key={product.id}>
                             {product.name} - {product.quantity} x ${product.price}
                           </li>
-                        ))}
+                        )}
                       </ul>
                     </TableCell>
-                  </TableRow>
-                )}
+                  </TableRow>}
               </React.Fragment>
             );
           })}
