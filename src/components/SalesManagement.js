@@ -22,13 +22,13 @@ export default function SalesManagement() {
   }, []);
 
   const handleSaleAdded = () => {
-    fetchSales(); // Actualiza la tabla después de agregar una venta
+    fetchSales();
   };
 
   return (
     <Container maxWidth="lg">
       <Box mt={4}>
-        <ManualSale onSaleAdded={handleSaleAdded} /> {/* Pasar handleSaleAdded aquí */}
+        <ManualSale onSaleAdded={handleSaleAdded} /> 
         <SalesTable sales={sales} />
       </Box>
     </Container>

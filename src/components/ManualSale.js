@@ -18,11 +18,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { useTheme } from "@mui/material/styles";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ManualSale = ({ onSaleAdded }) => {
+  const theme = useTheme();
   const [clients, setClients] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedClient, setSelectedClient] = useState("");
@@ -84,7 +86,7 @@ const ManualSale = ({ onSaleAdded }) => {
         name: product.name,
         price: product.price,
         quantity,
-        currency: product.currency || "USD" // Asegúrate de tener el campo 'currency'
+        currency: product.currency || "USD"
       };
     });
 
@@ -99,8 +101,7 @@ const ManualSale = ({ onSaleAdded }) => {
 
     try {
       await addDoc(collection(db, "sales"), saleData);
-      onSaleAdded(); // Actualiza la tabla de ventas
-      // Vacía el formulario y muestra el mensaje de éxito
+      onSaleAdded();
       setSelectedClient("");
       setSelectedProducts([{ productId: "", quantity: 1 }]);
       setDate(null);
@@ -133,14 +134,15 @@ const ManualSale = ({ onSaleAdded }) => {
   };
 
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+    <Accordion style={{ marginBottom: "6px" }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        style={{ backgroundColor: "#ff7961" }}
+      >
         <Typography variant="h6">Agregar Venta Manual</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Paper
-          style={{ padding: 16, width: "100%", backgroundColor: "#ff7961" }}
-        >
+        <Paper style={{ padding: 16, width: "100%" }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Select
