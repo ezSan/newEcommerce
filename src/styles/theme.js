@@ -43,6 +43,18 @@ const theme = createTheme({
   },
   components: {
     MuiButton: {
+      variants: [
+        {
+          props: { variant: 'accordionContained' },
+          style: {
+            backgroundColor: '#ff7961',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#ba000d',
+            },
+          },
+        },
+      ],
       styleOverrides: {
         root: {
           borderRadius: '8px',
@@ -53,6 +65,48 @@ const theme = createTheme({
           backgroundColor: '#1e88e5',
           '&:hover': {
             backgroundColor: '#005cb2',
+          },
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          marginBottom: '6px',
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ff7961',
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#1e88e5',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          '&.MuiTableCell-head': {
+            color: '#fff',
+          },
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: '#fff',
+          },
+          '&:hover': {
+            color: '#fff',
           },
         },
       },
@@ -83,4 +137,5 @@ const theme = createTheme({
     },
   },
 });
+
 export default theme;

@@ -82,9 +82,9 @@ export default function SalesTable({ sales }) {
   return (
     <TableContainer component={Paper}>
       <Table>
-        <TableHead style={{ backgroundColor: "#1e88e5" }}>
+        <TableHead>
           <TableRow>
-            <TableCell style={{ color: "#fff" }}>
+            <TableCell>
               <TableSortLabel
                 active={orderBy === "client"}
                 direction={orderBy === "client" ? orderDirection : "asc"}
@@ -94,7 +94,7 @@ export default function SalesTable({ sales }) {
                 Cliente
               </TableSortLabel>
             </TableCell>
-            <TableCell style={{ color: "#fff" }}>
+            <TableCell>
               <TableSortLabel
                 active={orderBy === "date"}
                 direction={orderBy === "date" ? orderDirection : "asc"}
@@ -104,19 +104,18 @@ export default function SalesTable({ sales }) {
                 Fecha
               </TableSortLabel>
             </TableCell>
-            <TableCell style={{ color: "#fff" }}>
+            <TableCell>
               <TableSortLabel
                 active={orderBy === "amount"}
                 direction={orderBy === "amount" ? orderDirection : "asc"}
                 onClick={() => handleSort("amount")}
-                style={{ color: "#fff" }}
               >
                 Monto de la Venta
               </TableSortLabel>
             </TableCell>
-            <TableCell style={{ color: "#fff" }}>Estado</TableCell>
-            <TableCell style={{ color: "#fff" }}>Método de Pago</TableCell>
-            <TableCell style={{ color: "#fff" }}>Productos</TableCell>
+            <TableCell>Estado</TableCell>
+            <TableCell>Método de Pago</TableCell>
+            <TableCell>Productos</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

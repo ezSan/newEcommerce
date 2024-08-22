@@ -135,10 +135,7 @@ const ManualSale = ({ onSaleAdded }) => {
 
   return (
     <Accordion style={{ marginBottom: "6px" }}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        style={{ backgroundColor: "#ff7961" }}
-      >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="h6">Agregar Venta Manual</Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -261,8 +258,7 @@ const ManualSale = ({ onSaleAdded }) => {
             </Grid>
             <Grid item xs={12}>
               <Button
-                variant="contained"
-                style={{ backgroundColor: "#ff7961", color: "#fff" }}
+                variant="accordionContained"
                 onClick={handleAddSale}
                 fullWidth
               >
