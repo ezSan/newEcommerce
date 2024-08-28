@@ -46,8 +46,8 @@ const EditProductForm = ({ open, onClose, product, categories, brands, onSave })
           select
         >
           {brands.map((brand) => (
-            <MenuItem key={brand} value={brand}>
-              {brand}
+            <MenuItem key={brand.id} value={brand.name}>
+              {brand.name}
             </MenuItem>
           ))}
         </TextField>
@@ -62,8 +62,8 @@ const EditProductForm = ({ open, onClose, product, categories, brands, onSave })
           select
         >
           {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
+            <MenuItem key={category.id} value={category.name}>
+              {category.name}
             </MenuItem>
           ))}
         </TextField>
@@ -98,5 +98,4 @@ const EditProductForm = ({ open, onClose, product, categories, brands, onSave })
   );
 };
 
-export default EditProductForm
-
+export default EditProductForm;
