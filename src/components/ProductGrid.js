@@ -15,6 +15,7 @@ const ProductGrid = ({ products, categories = [] }) => {
 
   const filteredProducts = products
     .filter(product =>
+      product.available === true && 
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter(
