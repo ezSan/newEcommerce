@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux'; // Importa useDispatch para despachar acciones
-import { setUser } from '../store/actions/userActions'; // Importa tu acción para setear el usuario
+import { useDispatch } from 'react-redux'; 
+import { setUser } from '../store/actions/userActions';
 
 const LoginModal = ({ open, onClose }) => {
   const theme = useTheme();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const router = useRouter();
-  const dispatch = useDispatch(); // Obtén la función dispatch de Redux
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setForm({
@@ -38,10 +38,10 @@ const LoginModal = ({ open, onClose }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Login response data:", data); // Verifica la respuesta
+        console.log("Login response data:", data);
 
-        // Establecer el token en las cookies
-        document.cookie = `token=${data.token}; path=/; max-age=${60 * 60}`; // 1 hora de expiración
+       
+        document.cookie = `token=${data.token}; path=/; max-age=${60 * 60}`; 
 
         dispatch(setUser(data.user));
         resetForm();

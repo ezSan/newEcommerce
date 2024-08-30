@@ -1,4 +1,11 @@
-import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc
+} from "firebase/firestore";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { db } from "../../firebaseConfig";
@@ -21,11 +28,10 @@ export default async function handler(req, res) {
       const userData = userDoc.data();
       const userId = userDoc.id;
 
-      // Check if userId is already present, if not add it
       if (!userData.userId) {
         const userRef = doc(db, "clients", userId);
         await updateDoc(userRef, { userId });
-        userData.userId = userId; // Update the local object to include the userId
+        userData.userId = userId;
       }
 
       const isMatch = await bcrypt.compare(password, userData.password);
@@ -33,11 +39,9 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "Contraseña incorrecta." });
       }
 
-      const token = jwt.sign(
-        { userId, isAdmin: userData.isAdmin },
-        secretKey,
-        { expiresIn: "1h" }
-      );
+      const token = jwt.sign({ userId, isAdmin: userData.isAdmin }, secretKey, {
+        expiresIn: "4h"
+      });
 
       res
         .status(200)

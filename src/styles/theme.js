@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1e88e5',
+      main: '#63cade',
       light: '#6ab7ff',
       dark: '#005cb2',
       contrastText: '#fff',
@@ -43,6 +43,18 @@ const theme = createTheme({
   },
   components: {
     MuiButton: {
+      variants: [
+        {
+          props: { variant: 'accordionContained' },
+          style: {
+            backgroundColor: '#F08080',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#ba000d',
+            },
+          },
+        },
+      ],
       styleOverrides: {
         root: {
           borderRadius: '8px',
@@ -50,19 +62,60 @@ const theme = createTheme({
           padding: '10px 20px',
         },
         containedPrimary: {
-          backgroundColor: '#1e88e5',
+          backgroundColor: '#63cade',
           '&:hover': {
             backgroundColor: '#005cb2',
           },
         },
       },
     },
-    MuiCard: {
+    MuiAccordion: {
       styleOverrides: {
         root: {
-          padding: '16px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          marginBottom: '6px',
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#F08080',
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#63cade',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          '&.MuiTableCell-head': {
+            color: '#fff',
+          },
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: '#fff',
+          },
+          '&:hover': {
+            color: '#fff',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          margin: '8px 0',
+          padding: '10px',
         },
       },
     },

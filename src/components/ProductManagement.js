@@ -11,15 +11,15 @@ import {
   IconButton,
   Box,
   Switch,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Typography,
 } from "@mui/material";
 import { db } from "../firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc
-} from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useTheme } from "@mui/material/styles";
 import EditProductForm from "./EditProductForm";
 import SearchInput from "./SearchInput";
@@ -32,18 +32,20 @@ const ProductManagement = ({ categories, brands }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
   const theme = useTheme();
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
     const fetchProducts = async () => {
       const querySnapshot = await getDocs(collection(db, "products"));
-      const productsList = querySnapshot.docs.map(doc => ({
+      const productsList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setProducts(productsList);
     };
@@ -51,23 +53,39 @@ const ProductManagement = ({ categories, brands }) => {
     fetchProducts();
   }, []);
 
-  const handleUpdateProduct = async updatedProduct => {
+  const handleUpdateProduct = async (updatedProduct) => {
     const productRef = doc(db, "products", updatedProduct.id);
     await updateDoc(productRef, updatedProduct);
     setProducts(
-      products.map(
-        product => (product.id === updatedProduct.id ? updatedProduct : product)
+      products.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
       )
     );
   };
 
-  const handleDeleteProduct = async id => {
-    const productRef = doc(db, "products", id);
-    await deleteDoc(productRef);
-    setProducts(products.filter(product => product.id !== id));
+  
+  const handleOpenDeleteConfirm = (product) => {
+    setProductToDelete(product);
+    setConfirmDeleteOpen(true);
   };
 
-  const handleEditOpen = product => {
+ 
+  const handleCloseDeleteConfirm = () => {
+    setConfirmDeleteOpen(false);
+    setProductToDelete(null);
+  };
+
+
+  const handleDeleteProduct = async () => {
+    if (productToDelete) {
+      const productRef = doc(db, "products", productToDelete.id);
+      await deleteDoc(productRef);
+      setProducts(products.filter((product) => product.id !== productToDelete.id));
+      handleCloseDeleteConfirm(); 
+    }
+  };
+
+  const handleEditOpen = (product) => {
     setSelectedProduct(product);
     setIsEditOpen(true);
   };
@@ -81,7 +99,7 @@ const ProductManagement = ({ categories, brands }) => {
     const productRef = doc(db, "products", id);
     await updateDoc(productRef, { available: !available });
     setProducts(
-      products.map(product =>
+      products.map((product) =>
         product.id === id ? { ...product, available: !available } : product
       )
     );
@@ -91,7 +109,7 @@ const ProductManagement = ({ categories, brands }) => {
     const productRef = doc(db, "products", id);
     await updateDoc(productRef, { offer: !offer });
     setProducts(
-      products.map(product =>
+      products.map((product) =>
         product.id === id ? { ...product, offer: !offer } : product
       )
     );
@@ -100,10 +118,7 @@ const ProductManagement = ({ categories, brands }) => {
   return (
     <Container maxWidth="lg">
       <Box mt={4}>
-        <SearchInput
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <SearchInput searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -121,17 +136,11 @@ const ProductManagement = ({ categories, brands }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredProducts.map(product =>
+              {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>
-                    {product.name}
-                  </TableCell>
-                  <TableCell>
-                    {product.brand}
-                  </TableCell>
-                  <TableCell>
-                    {product.category}
-                  </TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.brand}</TableCell>
+                  <TableCell>{product.category}</TableCell>
                   <TableCell>
                     {product.currency} {product.price}
                   </TableCell>
@@ -184,18 +193,18 @@ const ProductManagement = ({ categories, brands }) => {
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => handleDeleteProduct(product.id)}
+                      onClick={() => handleOpenDeleteConfirm(product)}
                     >
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              )}
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Box>
-      {selectedProduct &&
+      {selectedProduct && (
         <EditProductForm
           open={isEditOpen}
           onClose={handleEditClose}
@@ -203,7 +212,26 @@ const ProductManagement = ({ categories, brands }) => {
           categories={categories}
           brands={brands}
           onSave={handleUpdateProduct}
-        />}
+        />
+      )}
+
+      
+      <Dialog open={confirmDeleteOpen} onClose={handleCloseDeleteConfirm}>
+        <DialogTitle>Confirmar eliminación</DialogTitle>
+        <DialogContent>
+          <Typography>
+            ¿Estás seguro de que deseas eliminar este producto?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteConfirm} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteProduct} color="secondary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
