@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1e88e5',
+      main: '#63cade',
       light: '#6ab7ff',
       dark: '#005cb2',
       contrastText: '#fff',
@@ -47,7 +47,7 @@ const theme = createTheme({
         {
           props: { variant: 'accordionContained' },
           style: {
-            backgroundColor: '#ff7961',
+            backgroundColor: '#F08080',
             color: '#fff',
             '&:hover': {
               backgroundColor: '#ba000d',
@@ -62,7 +62,7 @@ const theme = createTheme({
           padding: '10px 20px',
         },
         containedPrimary: {
-          backgroundColor: '#1e88e5',
+          backgroundColor: '#63cade',
           '&:hover': {
             backgroundColor: '#005cb2',
           },
@@ -79,14 +79,14 @@ const theme = createTheme({
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          backgroundColor: '#ff7961',
+          backgroundColor: '#F08080',
         },
       },
     },
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: '#1e88e5',
+          backgroundColor: '#63cade',
         },
       },
     },

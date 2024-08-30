@@ -35,6 +35,7 @@ const [product, setProduct] = useState({
   description: "", // Descripción
   camera:"",
   selfie:"",
+  includesCharger:true,
 });
   const [newBrand, setNewBrand] = useState("");
   const theme = useTheme();
@@ -97,6 +98,7 @@ const [product, setProduct] = useState({
       wattage: "",
       camera:"",
       selfie:"",
+      includesCharger:true,
       sensors: {
         accelerometer: false,
         barometer: false,
@@ -282,6 +284,18 @@ const [product, setProduct] = useState({
         margin="normal"
       />
     )}
+
+    <FormControlLabel
+            control={
+              <Switch
+                checked={product.includesCharger}
+                onChange={handleChange}
+                name="includesCharger"
+                color="primary"
+              />
+            }
+            label="Incluye Cargador de Fábrica"
+          />
     <Typography variant="subtitle1" gutterBottom>
       Sensores
     </Typography>

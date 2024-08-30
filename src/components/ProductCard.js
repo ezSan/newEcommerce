@@ -9,12 +9,14 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { addToCart } from '../store/actions/cartActions';
+import { useTheme } from "@mui/material/styles";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const handleAdd = () => setQuantity(quantity + 1);
   const handleRemove = () => quantity > 1 && setQuantity(quantity - 1);
@@ -135,8 +137,21 @@ const ProductCard = ({ product }) => {
                       {sensor}
                     </Box>
                   </ListItem>
+                  
                 ))}
               </List>
+              <ListItem>
+              <Typography
+  sx={{
+    padding: '4px 8px',
+    backgroundColor: product.includesCharger ? 'primary.main' : 'error.main',
+    borderRadius: 1,
+    color: '#fff', //
+  }}
+>
+  {product.includesCharger ? 'Incluye cargador de fábrica' : 'SIN CARGADOR DE FÁBRICA'}
+</Typography>
+            </ListItem>
               <Typography variant="body1" sx={{ marginTop: 2 }}><strong>Descripción:</strong></Typography>
               <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{product.description}</Typography>
             </Box>
