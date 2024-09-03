@@ -37,7 +37,6 @@ const CartModal = ({ open, onClose }) => {
     dispatch(removeFromCart(item));
   };
 
-
   const handleCheckout = async () => {
     if (user) {
       const adminNumber = 2914413671;
@@ -69,9 +68,9 @@ const CartModal = ({ open, onClose }) => {
           totalAmount,
           createdAt: new Date()
         });
-        console.log("Venta guardada en Firestore");      
-        dispatch(clearCart());        
-        setSuccessMessage(true);       
+        console.log("Venta guardada en Firestore");
+        dispatch(clearCart());
+        setSuccessMessage(true);
         window.open(whatsappLink, "_blank");
       } catch (error) {
         console.error("Error guardando la venta: ", error);
@@ -83,11 +82,11 @@ const CartModal = ({ open, onClose }) => {
 
   const handleSnackbarClose = () => {
     setSuccessMessage(false);
-    onClose(); 
+    onClose();
   };
 
   return (
-    <>
+    <fragment>
       <Dialog
         open={open}
         onClose={onClose}
@@ -115,7 +114,8 @@ const CartModal = ({ open, onClose }) => {
                   <ListItem key={item.id}>
                     <ListItemText
                       primary={`${item.name} (x${item.quantity})`}
-                      secondary={`${item.currency} ${item.price * item.quantity}`}
+                      secondary={`${item.currency} ${item.price *
+                        item.quantity}`}
                     />
                     <ListItemSecondaryAction>
                       <IconButton
@@ -165,17 +165,20 @@ const CartModal = ({ open, onClose }) => {
         </DialogActions>
       </Dialog>
 
-      
       <Snackbar
         open={successMessage}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           Compra gestionada con éxito
         </Alert>
       </Snackbar>
-    </>
+    </fragment>
   );
 };
 

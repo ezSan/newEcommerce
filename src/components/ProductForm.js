@@ -16,27 +16,29 @@ import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 
 const ProductForm = ({ categories, brands, setBrands, onAddProduct }) => {
-const [product, setProduct] = useState({
-  name: "",
-  brand: "",
-  category: "",
-  price: "",
-  currency: "$",
-  images: [],
-  available: false,
-  offer: false,
-  ram: "", // RAM
-  rom: "", // ROM
-  battery: "", // Batería
-  screen: "", // Pantalla
-  fastCharge: false, // Carga rápida
-  watts: "", // Watts para carga rápida
-  sensors: [], // Sensores
-  description: "", // Descripción
-  camera:"",
-  selfie:"",
-  includesCharger:true,
-});
+  const [product, setProduct] = useState({
+    name: "",
+    brand: "",
+    category: "",
+    price: "",
+    currency: "$",
+    sensors: [],
+    images: [],
+    available: false,
+    offer: false,
+    ram: "",
+    rom: "",
+    battery: "",
+    screen: "",
+    fastCharge: false,
+    watts: "",
+    description: "",
+    camera: "",
+    selfie: "",
+    includesCharger: true,
+    isDualSim: false
+  });
+
   const [newBrand, setNewBrand] = useState("");
   const theme = useTheme();
 
@@ -96,9 +98,10 @@ const [product, setProduct] = useState({
       offer: false,
       fastCharge: false,
       wattage: "",
-      camera:"",
-      selfie:"",
-      includesCharger:true,
+      camera: "",
+      selfie: "",
+      includesCharger: true,
+      isDualSim: false,
       sensors: {
         accelerometer: false,
         barometer: false,
@@ -106,14 +109,14 @@ const [product, setProduct] = useState({
         gps: false,
         pedometer: false,
         nfc: false,
-        fingerprint: false,
+        fingerprint: false
       }
     });
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-          <TextField
+      <TextField
         select
         label="Categoría"
         name="category"
@@ -128,7 +131,7 @@ const [product, setProduct] = useState({
           </MenuItem>
         )}
       </TextField>
-      
+
       <TextField
         select
         label="Marca"
@@ -142,7 +145,7 @@ const [product, setProduct] = useState({
           <MenuItem key={brand.id} value={brand.name}>
             {brand.name}
           </MenuItem>
-        )}        
+        )}
         <MenuItem>
           <Box display="flex" alignItems="center">
             <TextField
@@ -213,79 +216,78 @@ const [product, setProduct] = useState({
         label="Oferta"
       />
 
-      {product.category === "Smartphones" && (
-  <>
-    <TextField
-      label="RAM"
-      name="ram"
-      value={product.ram}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <TextField
-      label="ROM"
-      name="rom"
-      value={product.rom}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <TextField
-      label="Batería"
-      name="battery"
-      value={product.battery}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <TextField
-      label="Pantalla"
-      name="screen"
-      value={product.screen}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <TextField
-      label="Camara Frontal"
-      name="selfie"
-      value={product.selfie}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <TextField
-      label="Camara Principal"
-      name="camera"
-      value={product.camera}
-      onChange={handleChange}
-      fullWidth
-      margin="normal"
-    />
-    <FormControlLabel
-      control={
-        <Switch
-          checked={product.fastCharge}
-          onChange={handleChange}
-          name="fastCharge"
-          color="primary"
-        />
-      }
-      label="Carga Rápida"
-    />
-    {product.fastCharge && (
-      <TextField
-        label="Watts"
-        name="watts"
-        value={product.watts}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-      />
-    )}
+      {product.category === "Smartphones" &&
+        <fragment>
+          <TextField
+            label="RAM"
+            name="ram"
+            value={product.ram}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="ROM"
+            name="rom"
+            value={product.rom}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Batería"
+            name="battery"
+            value={product.battery}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Pantalla"
+            name="screen"
+            value={product.screen}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Camara Frontal"
+            name="selfie"
+            value={product.selfie}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Camara Principal"
+            name="camera"
+            value={product.camera}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={product.fastCharge}
+                onChange={handleChange}
+                name="fastCharge"
+                color="primary"
+              />
+            }
+            label="Carga Rápida"
+          />
+          {product.fastCharge &&
+            <TextField
+              label="Watts"
+              name="watts"
+              value={product.watts}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />}
 
-    <FormControlLabel
+          <FormControlLabel
             control={
               <Switch
                 checked={product.includesCharger}
@@ -296,42 +298,64 @@ const [product, setProduct] = useState({
             }
             label="Incluye Cargador de Fábrica"
           />
-    <Typography variant="subtitle1" gutterBottom>
-      Sensores
-    </Typography>
-    <Box>
-      {["Acelerómetro", "Barómetro","Brújula", "Giroscopio", "GPS", "Podómetro", "NFC", "Huella dactilar"].map(sensor => (
-        <FormControlLabel
-          control={
-            <Switch
-              checked={product.sensors.includes(sensor)}
-              onChange={() => {
-                const updatedSensors = product.sensors.includes(sensor)
-                  ? product.sensors.filter(s => s !== sensor)
-                  : [...product.sensors, sensor];
-                setProduct(prev => ({ ...prev, sensors: updatedSensors }));
-              }}
-              name={sensor}
-              color="primary"
-            />
-          }
-          label={sensor}
-          key={sensor}
-        />
-      ))}
-    </Box>
-    <TextField
-      label="Descripción"
-      name="description"
-      value={product.description}
-      onChange={handleChange}
-      fullWidth
-      multiline
-      rows={4}
-      margin="normal"
-    />
-  </>
-)}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={product.isDualSim}
+                onChange={handleChange}
+                name="isDualSim"
+                color="primary"
+              />
+            }
+            label="Dual SIM"
+          />
+          <Typography variant="subtitle1" gutterBottom>
+            Sensores
+          </Typography>
+          <Box>
+            {[
+              "Acelerómetro",
+              "Barómetro",
+              "Brújula",
+              "Giroscopio",
+              "GPS",
+              "Podómetro",
+              "NFC",
+              "Huella dactilar"
+            ].map(sensor =>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={product.sensors.includes(sensor)}
+                    onChange={() => {
+                      const updatedSensors = product.sensors.includes(sensor)
+                        ? product.sensors.filter(s => s !== sensor)
+                        : [...product.sensors, sensor];
+                      setProduct(prev => ({
+                        ...prev,
+                        sensors: updatedSensors
+                      }));
+                    }}
+                    name={sensor}
+                    color="primary"
+                  />
+                }
+                label={sensor}
+                key={sensor}
+              />
+            )}
+          </Box>
+          <TextField
+            label="Descripción"
+            name="description"
+            value={product.description}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+        </fragment>}
 
       <Box
         {...getRootProps()}
