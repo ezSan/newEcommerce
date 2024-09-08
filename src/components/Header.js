@@ -27,7 +27,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/actions/userActions";
 import CartModal from "./CartModal";
-import DollarRate from "./DollarRate";
+import OfferAndDollarRate from "./OfferAndDollarRate";
 
 export default function Header() {
   const theme = useTheme();
@@ -135,7 +135,7 @@ export default function Header() {
           <Toolbar style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             {/* Sección Izquierda: Logo */}
             <Button color="inherit" onClick={() => router.push("/")}>
-              <Typography variant="h6">wildTech</Typography>
+              <Typography variant="h1" sx={{color:'#f0f0f0'}}>wildTech</Typography>
             </Button>
 
             {/* Sección Derecha: Carrito y Menú */}
@@ -210,17 +210,9 @@ export default function Header() {
         </AppBar>
       </header>
 
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.paper,
-          padding: "4px 16px",
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+      <Box      
       >
-        <DollarRate />
+        <OfferAndDollarRate />
       </Box>
 
       {/* Modal del Carrito de Compras */}
