@@ -4,7 +4,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../styles/theme";
-import NavBar from "../components/NavBar";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
 import { Provider } from "react-redux";
@@ -32,7 +32,7 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <CssBaseline />
-          <NavBar />
+          <Header />
           <Component {...pageProps} />
           <Footer />
         </Provider>

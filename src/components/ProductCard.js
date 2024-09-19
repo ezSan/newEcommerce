@@ -29,11 +29,11 @@ const ProductCard = ({ product }) => {
   const handleClose = () => setOpen(false);
 
   return (
-    <>
+    <fragment>
       <Card sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: 3, textAlign: 'center' }}>
         <Box sx={{ position: 'relative', height: '250px' }}>
           {product.images && product.images.length > 1 && (
-            <>
+            <fragment>
               <IconButton
                 sx={{
                   position: 'absolute', top: '50%', left: 8, transform: 'translateY(-50%)',
@@ -52,7 +52,7 @@ const ProductCard = ({ product }) => {
               >
                 <ArrowForwardIosIcon />
               </IconButton>
-            </>
+            </fragment>
           )}
           <CardMedia
             component="img"
@@ -63,11 +63,14 @@ const ProductCard = ({ product }) => {
           />
         </Box>
         <CardContent sx={{ padding: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             {product.name}
           </Typography>
+          <Typography variant="body3" color="text.secondary" sx={{ marginBottom: 1 , fontWeight: 'bold'}}>
+            {product.brand}
+          </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
-            {product.brand} - {product.ram} RAM / {product.rom} ROM
+          {product.rom} ROM / {product.ram} RAM 
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 2 }}>
             ${product.price}
@@ -89,10 +92,8 @@ const ProductCard = ({ product }) => {
           </Button>
         </CardContent>
       </Card>
-
-      {/* Modal for Detailed Information */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle>{product.name}</DialogTitle>
+        <DialogTitle>{product.name} - u${product.price}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
             <Box sx={{ position: 'relative', width: '100%' }}>
@@ -142,15 +143,29 @@ const ProductCard = ({ product }) => {
               </List>
               <ListItem>
               <Typography
-  sx={{
-    padding: '4px 8px',
-    backgroundColor: product.includesCharger ? 'primary.main' : 'error.main',
-    borderRadius: 1,
-    color: '#fff', //
-  }}
->
-  {product.includesCharger ? 'Incluye cargador de fábrica' : 'SIN CARGADOR DE FÁBRICA'}
-</Typography>
+                sx={{
+                  padding: '4px 8px',
+                  backgroundColor: product.includesCharger ? 'primary.main' : 'error.main',
+                  borderRadius: 1,
+                  color: '#fff', //
+                }}
+              >
+              {product.includesCharger ? 'Incluye cargador de fábrica' : 'SIN CARGADOR DE FÁBRICA'}
+              </Typography>
+              {product.isDualSim && (
+              <Typography
+                sx={{
+                  padding: '4px 8px',
+                  backgroundColor: 'primary.main',
+                  borderRadius: 1,
+                  color: '#fff',
+                  margin:'6px'
+                }}
+              >
+                DUAL SIM
+              </Typography>
+)}
+              
             </ListItem>
               <Typography variant="body1" sx={{ marginTop: 2 }}><strong>Descripción:</strong></Typography>
               <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{product.description}</Typography>
@@ -162,7 +177,7 @@ const ProductCard = ({ product }) => {
           <Button onClick={handleAddToCart} variant="contained" color="primary">Añadir al Carrito</Button>
         </DialogActions>
       </Dialog>
-    </>
+    </fragment>
   );
 };
 

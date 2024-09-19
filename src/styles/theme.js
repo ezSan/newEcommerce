@@ -3,24 +3,30 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#63cade',
-      light: '#6ab7ff',
-      dark: '#005cb2',
-      contrastText: '#fff',
+      main: '#3CB371', // Medium Sea Green
+      light: '#66CDAA',
+      dark: '#2E8B57',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#f44336',
-      light: '#ff7961',
-      dark: '#ba000d',
-      contrastText: '#fff',
+      main: '#9B59B6', // Amethyst
+      light: '#BB8FCE',
+      dark: '#6C3483',
+      contrastText: '#ffffff',
+    },
+    accent: {
+      main: '#FF7F50', // Coral
+      light: '#FFA07A',
+      dark: '#CD5C5C',
+      contrastText: '#ffffff',
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#fff',
+      default: '#f8f9fa',
+      paper: '#ffffff',
     },
     text: {
-      primary: '#333',
-      secondary: '#666',
+      primary: '#333333',
+      secondary: '#4f4f4f',
     },
   },
   typography: {
@@ -28,10 +34,12 @@ const theme = createTheme({
     h1: {
       fontSize: '2.5rem',
       fontWeight: 700,
+      color: '#3CB371', // Primary color
     },
     h2: {
       fontSize: '2rem',
       fontWeight: 600,
+      color: '#9B59B6', // Secondary color
     },
     h5: {
       fontSize: '24px',
@@ -39,22 +47,11 @@ const theme = createTheme({
     },
     body1: {
       fontSize: '1rem',
+      color: '#333333',
     },
   },
   components: {
     MuiButton: {
-      variants: [
-        {
-          props: { variant: 'accordionContained' },
-          style: {
-            backgroundColor: '#F08080',
-            color: '#fff',
-            '&:hover': {
-              backgroundColor: '#ba000d',
-            },
-          },
-        },
-      ],
       styleOverrides: {
         root: {
           borderRadius: '8px',
@@ -62,31 +59,29 @@ const theme = createTheme({
           padding: '10px 20px',
         },
         containedPrimary: {
-          backgroundColor: '#63cade',
+          backgroundColor: '#3CB371',
           '&:hover': {
-            backgroundColor: '#005cb2',
+            backgroundColor: '#2E8B57',
           },
         },
-      },
-    },
-    MuiAccordion: {
-      styleOverrides: {
-        root: {
-          marginBottom: '6px',
+        containedSecondary: {
+          backgroundColor: '#9B59B6',
+          '&:hover': {
+            backgroundColor: '#6C3483',
+          },
         },
-      },
-    },
-    MuiAccordionSummary: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#F08080',
+        containedAccent: {
+          backgroundColor: '#FF7F50',
+          '&:hover': {
+            backgroundColor: '#CD5C5C',
+          },
         },
       },
     },
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: '#63cade',
+          backgroundColor: '#3CB371',
         },
       },
     },
@@ -96,26 +91,6 @@ const theme = createTheme({
           '&.MuiTableCell-head': {
             color: '#fff',
           },
-        },
-      },
-    },
-    MuiTableSortLabel: {
-      styleOverrides: {
-        root: {
-          '&.Mui-active': {
-            color: '#fff',
-          },
-          '&:hover': {
-            color: '#fff',
-          },
-        },
-      },
-    },
-    MuiSelect: {
-      styleOverrides: {
-        root: {
-          margin: '8px 0',
-          padding: '10px',
         },
       },
     },
@@ -132,6 +107,7 @@ const theme = createTheme({
         h6: {
           fontSize: '1.5rem',
           fontWeight: 500,
+          color: '#FF7F50', // Accent color for headings
         },
       },
     },
